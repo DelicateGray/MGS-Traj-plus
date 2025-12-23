@@ -1,0 +1,55 @@
+#重构网络参数
+rebuild :
+  epochs : 50
+  warmup_epochs : 10
+  patience : 50
+  default_lr : 5e-5
+  weight_decay : 2e-4
+  max_drop_prob : 0.2
+  alpha : 0.5
+  beta : 0.6
+  device_str : "cuda:0"
+  sample_ratio : 1
+  task :
+    RTR : 1
+    STR : 1
+  kinematic : 1
+  dwa : 1
+  test_model_path : None
+#预测网络参数
+pred :
+  epochs : 50
+  warmup_epochs : 10
+  patience : 50
+  default_lr : 5e-5
+  weight_decay : 2e-4
+  max_drop_prob : 0.2
+  device_str : "cuda:1"
+  sample_ratio : 1
+  task :
+    RTR : 1
+    STR : 1
+  pretrained_model_path : None
+  test_model_path : None
+#公共参数
+common :
+  data_dir : "./datasets/highd/"
+  log_dir : "./log"
+  sampling_frequency : 25
+  downsampling_rate : 5
+  his_horizon : 3
+  fut_horizon : 5
+  lanepoint_num : 20
+  lanepoint_interval : 10
+  B : 128
+  N : 11
+  Th : &Th 15
+  Tf : 25
+  T : 40
+  D : 10
+  Lmax : *Th
+  De : 256
+  head_num : 8
+  stnet_depth : 3
+  aggnet_depth : 1
+  socialnet_depth : 2

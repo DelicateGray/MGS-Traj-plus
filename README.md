@@ -1,0 +1,116 @@
+# MGS-Traj-plus
+
+```
+📁 ./debug/——debug文件（未git，没啥用）
+    📄 debug.ipynb
+📁 ./deployment/——预测模型优化及部署
+    📄 __init__.py
+    📄 calibrator.py——INT8量化校准
+    📄 common.py——部署通用工具
+    📄 common_runtime.py——部署通用工具
+    📄 inference.py——模型部署、推理及后处理
+    📄 pruner.py——模型非结构化和结构化剪枝
+📁 ./highd/——交互式场景建模（highd数据集预处理）
+    📄 __init__.py
+    📁 api/——highd数据集官方api
+        📄 __init__.py
+        📄 main.py——轨迹可视化主文件
+        📄 plot_utils.py——轨迹可视化工具
+        📄 read_csv.py——数据文件读取
+        📄 visualize_frame.py——输出轨迹动图或视频
+    📁 doc/——相关文档
+        📄 LICENSE
+        📄 README.md
+        📄 highD-Format.pdf——highd数据集官方文档
+    📄 my_highd.py——highd数据集处理
+📁 ./log/——过程及结果数据（未git，文件太大了适合放在本地）
+    📁 inference/——预测模型推理数据
+        📁 2025-02-24-22_19_20_int8/——INT8量化模型推理数据
+            📄 inference_log.txt——推理指标
+            📄 pred_model_calibration.cache——INT8量化校准缓存文件
+            📄 pred_model_int8.engine——INT8量化模型的TensorRT引擎
+            📄 pred_model_int8.onnx——INT8量化模型的ONNX中间格式
+        📁 2025-02-24-22_28_23_0.1_0.1_float32/——剪枝模型推理数据
+        📁 2025-02-24-22_36_28_0.1_0.1_int8/——剪枝+INT8量化模型推理数据
+        📁 2025-02-25-09_42_48_float32/——无剪枝无量化模型推理数据
+    📁 kinematic/——RTR任务运动学约束数据
+        📁 2025-01-11-13_34_01/——运动学模型1~5s时域下预测结果
+            📄 test_log.txt——预测RMSE
+            📄 test_traj.pkl——预测轨迹
+        📁 2025-01-11-15_45_15/——运动学约束适用概率的蒙特卡洛模拟数据
+            📄 sim_log.txt——模拟的平均概率
+            📄 sim_prob.pkl——模拟的概率分布
+    📁 pred/——预测模型预测数据
+        📁 00/——无预训练的基线模型数据
+            📁 2024-12-16-17_09_07/
+                📁 checkpoint/——训练检查点，保存验证损失降低的epoch对应的模型
+                📄 config_log.txt——训练的参数设置
+                📄 events.out.tfevents.1734340228.DESKTOP-6O3C2CV.6420.0——训练的tensorboard日志文件
+                📄 events.out.tfevents.1734340228.DESKTOP-6O3C2CV.6420.1——训练的tensorboard日志文件
+                📄 test_log.txt——1~5s时域下的预测RMSE
+                📄 test_traj.pkl——预测轨迹
+        📁 01/——基于STR任务的预测模型数据
+            📁 2024-12-24-15_58_49_k_dwa/——基于STR任务（基线）的预测模型数据
+            📁 2024-12-28-21_32_52_nok/——基于STR任务（无运动学约束）的预测模型数据
+            📁 2025-01-08-21_45_58_nodwa/——基于STR任务（无DWA算法）的预测模型数据
+        📁 10/——基于RTR任务的预测模型数据
+            📁 2024-12-24-15_58_07_k_dwa/——基于RTR任务（基线）的预测模型数据
+            📁 2024-12-28-21_33_02_nok/——基于RTR任务（无运动学约束）的预测模型数据
+            📁 2025-01-08-21_46_56_nodwa/——基于RTR任务（无DWA算法）的预测模型数据
+        📁 11/——基于RTR+STR任务的预测模型数据
+            📁 2024-12-22-15_39_37_k_dwa/——基于RTR+STR任务（基线）的预测模型数据
+            📁 2024-12-28-21_32_36_nok/——基于RTR+STR任务（无运动学约束）的预测模型数据
+            📁 2025-01-08-21_47_18_nodwa/——基于RTR+STR任务（无DWA算法）的预测模型数据
+            📁 2025-02-21-15_39_22_0.05_0.05/——基于RTR+STR任务（基线），非结构化0.05+结构化0.05剪枝比例的预测模型测试结果
+            📁 2025-02-21-15_41_03_0.1_0.1/——基于RTR+STR任务（基线），非结构化0.1+结构化0.1剪枝比例的预测模型测试结果
+            📁 2025-02-21-15_42_02_0.15_0.15/——基于RTR+STR任务（基线），非结构化0.15+结构化0.15剪枝比例的预测模型测试结果
+            📁 2025-02-21-15_43_06_0.2_0.2/——基于RTR+STR任务（基线），非结构化0.2+结构化0.2剪枝比例的预测模型测试结果
+    📁 pruning/——剪枝参数设置及剪枝后的预测模型
+        📁 2025-02-21-15_36_02_0.05_0.05/——非结构化0.05+结构化0.05剪枝比例
+            📄 pred_model_1001.pkl——剪枝后的预测模型
+            📄 pruning_args.txt——剪枝参数设置
+            📄 social_para.pkl——交互网络剪枝前后的权重参数
+            📄 ts_para.pkl——时空网络剪枝前后的权重参数
+        📁 2025-02-21-15_36_20_0.1_0.1/——非结构化0.1+结构化0.1剪枝比例
+        📁 2025-02-21-15_36_38_0.15_0.15/——非结构化0.15+结构化0.15剪枝比例
+        📁 2025-02-21-15_36_47_0.2_0.2/——非结构化0.2+结构化0.2剪枝比例
+    📁 rebuild/——重构预训练模型数据
+        📁 11/——RTR+STR任务
+            📁 2024-12-16-17_08_46_k_dwa/——RTR+STR任务（基线）预训练模型数据
+                📁 checkpoint/——预训练检查点，保存验证损失降低的epoch对应的模型
+                📄 config.txt——预训练参数设置
+                📄 events.out.tfevents.1734340188.DESKTOP-6O3C2CV.20104.0——预训练的tensorboard日志文件
+                📄 events.out.tfevents.1734340188.DESKTOP-6O3C2CV.20104.1——预训练的tensorboard日志文件
+                📄 test_log.txt——5s时域下的很像、纵向及整体的重构RMSE
+                📄 test_traj.pkl——5s时域下的重构轨迹
+            📁 2024-12-24-16_52_19_nok/——RTR+STR任务（无运动学约束）预训练模型数据
+            📁 2025-01-04-13_24_59_nodwa/——RTR+STR任务（无DWA算法）预训练模型数据
+📁 ./metric/——重构&预测指标
+    📄 __init__.py
+    📄 ade.py——平均位移误差ADE(m)
+    📄 fde.py——终点位移误差FDE(m)
+    📄 inference_time.py——推理时间(ms)
+    📄 rmse.py——均方根误差RMSE(m)
+📁 ./model/——轨迹重构和轨迹预测的网络模型
+    📄 __init__.py
+    📄 pred_model.py——预测网络模型
+    📄 pred_trainer.py——训练文件
+    📄 rebuild_model.py——重构网络模型
+    📄 rebuild_trainer.py——预训练文件
+    📁 utils/——工具
+        📄 __init__.py
+        📄 decoder.py——解码器
+        📄 encoder.py——编码器
+        📄 k_computer.py——RTR任务运动学模型
+        📄 m_simulater.py——RTR任务运动学约束适用概率的蒙特卡洛模拟
+        📄 model_utils.py——模型结构工具
+        📄 trainer_utils.py——训练工具
+📁 ./visualization/——可视化
+    📄 viz_utils.py——可视化通用工具
+    📄 vizer.py——可视化文件
+📄 __init__.py
+📄 config.py——加载配置
+📄 config.yaml——参数配置文件
+📄 README.md——项目说明
+📄 requirements.txt——项目的依赖项
+```
